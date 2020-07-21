@@ -10,6 +10,8 @@ function receiveInvitation(user) {
 	};
 
 	if (confirmMessage) {
+		leavePrivateChat();
+
 		message.message = "accepted the invite";
 		socket.emit("connection", message);
 

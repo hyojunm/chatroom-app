@@ -5,7 +5,7 @@ from flask_socketio import SocketIO, send, emit
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-app.secret_key = os.environ.get("SECRET_KEY") or "secret key"
+app.secret_key = os.environ.get("SECRET_KEY")
 
 users = {}
 
@@ -108,4 +108,4 @@ def receive_invite(user):
 		emit("invitation", user_info, room=invited_user)
 
 if __name__ == "__main__":
-	socketio.run(app)
+	app.run()

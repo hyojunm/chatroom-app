@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+	<div>
+		<h2 class="text-center font-weight-bold">Chat with anyone, anywhere.</h2>
+		<h4 class="text-center mb-4">Join the conversation.</h4>
+
+		<form class="form" method="POST">
+		  	{% with messages = get_flashed_messages() %}
+		  		{% if messages %}
+		  			{% for message in messages %}
+		  				<p class="alert alert-dark text-center">{{ message }}</p>
+		  			{% endfor %}
+		  		{% endif %}
+		  	{% endwith %}
+
+			<div class="input-group my-3">
+		        <div class="input-group-prepend">
+		          <div class="input-group-text">@</div>
+		        </div>
+		        <input type="text" id="username-input" class="form-control shadow-none" name="username" placeholder="Username">
+		  	</div>
+			  	
+			<button type="submit" id="join-btn" class="btn btn-dark shadow-none w-100">Join</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

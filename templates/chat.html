@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+	<div id="history" style="margin: 75px 0px 75px 0px"></div>
+
+	<form id="send" class="form-row p-3 bg-white fixed-bottom">
+		<input type="text" id="message-input" class="form-control col-10 shadow-none" name="message" placeholder="Type something..." required>
+		<button type="submit" id="send-btn" class="btn btn-dark col-2 shadow-none">Send</button>
+	</form>
+
+	<div class="modal fade" id="private-chat" tabindex="-1" role="dialog" aria-labelledby="private-chat-label" aria-hidden="true">
+	  	<div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+	      		<div class="modal-header bg-dark text-white">
+		     		<h5 class="modal-title" id="private-chat-label">
+		     			Private chat with:
+		     			<strong id="private-chat-user"></strong>
+		     		</h5>
+
+		        	<button class="btn btn-outline-light shadow-none" data-dismiss="modal">Leave Private Chat</button>
+		      	</div>
+		      	<div class="modal-body">
+		        	<div id="private-history"></div>
+
+					<form id="private-send" class="form-row p-3 bg-white">
+						<input type="text" id="private-message-input" class="form-control col-10 shadow-none" name="message" placeholder="Type something..." required>
+						<button type="submit" id="private-send-btn" class="btn btn-dark col-2 shadow-none">Send</button>
+					</form>
+		      	</div>
+	    	</div>
+	  	</div>
+	</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script src="{{url_for('static', filename='chat.js')}}"></script>
+<script src="{{url_for('static', filename='private.js')}}"></script>
+{% endblock %}

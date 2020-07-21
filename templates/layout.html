@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ title }} - Chatroom App</title>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+	<style>
+		* { border-radius: 0px !important }
+
+		.message {
+			word-break: break-all;
+		}
+
+		.user {
+			color: black !important;
+			pointer-events: auto !important;
+		}
+
+		#private-history {
+			width: 100%;
+			height: 50vh;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark text-white fixed-top">
+	  <div class="navbar-brand font-weight-bold">Chatroom App</div>
+
+	  <button class="navbar-toggler btn p-1 border-0 shadow-none" data-toggle="collapse" data-target="#navbar-content">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <div class="collapse navbar-collapse" id="navbar-content">
+	    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+
+	      {% if user %}
+		      <li class="nav-item dropdown">
+		        <a href="#" id="users-dropdown" class="nav-link dropdown-toggle" data-toggle="dropdown">
+		          <span id="total-users">0</span> user(s) online
+		        </a>
+
+		        <div id="users-list" class="dropdown-menu" aria-labelledby="users-dropdown">
+		          <a href="#" class="dropdown-item disabled user">
+		          	<strong>{{ user }}</strong> (you)
+		          </a>
+		        </div>
+		      </li>
+	      {% endif %}
+	    </ul>
+
+	    {% if user %}
+		    <span class="nav-text mr-3">Welcome, <strong>{{ user }}</strong>!</span>
+		  	<a href="{{url_for('leave')}}" id="leave-btn" class="btn btn-outline-light shadow-none">Leave</a>
+		{% endif %}
+	  </div>
+	</nav>
+
+	{% block content %}{% endblock %}
+</body>
+</html>

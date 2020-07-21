@@ -1,4 +1,4 @@
-var socket = io.connect("http://" + document.domain + ":" + window.location.port + "/", { transports: ["websocket"] });
+var socket = io.connect("https://" + document.domain + ":" + window.location.port + "/", { transports: ["websocket"] });
 
 socket.on("connect", join);
 socket.on("message", getMessage);

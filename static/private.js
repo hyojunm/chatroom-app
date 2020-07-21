@@ -24,7 +24,7 @@ function receiveInvitation(user) {
 
 function inviteUser(event) {
 	const selectedUser = $(event.currentTarget).text().replace(" (you)", "").trim();
-	socket.emit("invite", selectedUser);
+	socket.emit("invite", { "user": selectedUser });
 
 	$("#private-chat").modal("show");
 	$("#private-chat-user").text(selectedUser);

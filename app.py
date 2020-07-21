@@ -5,7 +5,7 @@ from flask_socketio import SocketIO, send, emit
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-app.secret_key = os.environ.get("SECRET_KEY")
+app.secret_key = os.environ.get("SECRET_KEY") or "secret key"
 
 users = {}
 
@@ -35,11 +35,10 @@ def join():
 
 @app.route("/leave")
 def leave():
-	if not session.get("user"):
-		return redirect(url_for("join"))
+	if session.get("user"):
+		flash("You left the conversation. See you later!")
+		session.pop("user")
 
-	flash("You left the conversation. See you later!")
-	session.pop("user")
 	return redirect(url_for("join"))
 
 @socketio.on("connection")
@@ -54,17 +53,15 @@ def handle_connection(message):
 
 	if message["room"] == "private":
 		user = users[user]
-		private_chat = users[session.get("private_chat")] or users[message["user"]]
+		private_chat = users[session.get("private_chat")] if session.get("private_chat") else users[message["user"]]
 
 		if message["message"] == "accepted the invite":
 			session["private_chat"] = message["user"]
-			emit("notification", message_info, room=private_chat)
 			emit("notification", message_info, room=user)
 		elif message["message"] == "left":
 			session.pop("private_chat")
-			emit("notification", message_info, room=private_chat)
-		else:
-			emit("notification", message_info, room=private_chat)
+		
+		emit("notification", message_info, room=private_chat)
 	else:
 		if message["message"] == "joined":
 			users[user] = request.sid
@@ -92,26 +89,23 @@ def receive_message(message):
 		if message["room"] == "private":
 			user = users[session.get("user")]
 			private_chat = users[session.get("private_chat")]
-			send(message_info, room=private_chat)
 			send(message_info, room=user)
+			send(message_info, room=private_chat)
 		else:
 			send(message_info, broadcast=True)
 
 @socketio.on("invite")
 def receive_invite(user):
 	host_user = session.get("user")
-	invited_user = None
-
-	if user in users:
-		invited_user = users[user]
-		session["private_chat"] = user
+	invited_user = users[user["user"]] if user["user"] in users else None
 
 	user_info = {
 		"user": host_user
 	}
 
-	if invited_user and host_user != user:
+	if invited_user and host_user != user["user"]:
+		session["private_chat"] = user["user"]
 		emit("invitation", user_info, room=invited_user)
 
 if __name__ == "__main__":
-	app.run()
+	socketio.run(app)

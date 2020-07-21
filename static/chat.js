@@ -1,6 +1,7 @@
-var socket = io.connect("http://" + document.domain + ":" + window.location.port + "/", { transports: ["websocket"] });
+var socket = io.connect(window.location.protocol + "//" + document.domain + ":" + window.location.port, { transports: ["websocket"] });
 
 socket.on("connect", join);
+socket.on("disconnect", leave);
 socket.on("message", getMessage);
 socket.on("notification", getNotification);
 socket.on("users", updateUsers);

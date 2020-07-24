@@ -1,16 +1,16 @@
 var socket = io.connect(window.location.protocol + "//" + document.domain + ":" + window.location.port, { transports: ["websocket"] });
 
 socket.on("connect", join);
-socket.on("disconnect", leave);
+socket.on("disconnect", () => { leave("public"); });
 socket.on("message", getMessage);
 socket.on("notification", getNotification);
 socket.on("users", updateUsers);
 
 $("#send-btn").click(event => { sendMessage(event, "message-input", "public"); });
 $("#private-send-btn").click(event => { sendMessage(event, "private-message-input", "private"); });
-$("#leave-btn").click(leave);
+$("#leave-btn").click(() => { leave("public"); });
 
-$(window).on("unload", leave);
+$(window).on("beforeunload", () => { leave("public"); });
 
 function join() {
 	const message = {
@@ -21,14 +21,19 @@ function join() {
 	socket.emit("connection", message);
 }
 
-function leave() {
+function leave(room) {
 	const message = {
 		"message": "left",
-		"room": "public"
+		"room": "private"
 	};
 
 	socket.emit("connection", message);
-	socket.disconnect();
+
+	if (room == "public") {
+		message.room = "public";
+		socket.emit("connection", message);
+		socket.disconnect();
+	}
 }
 
 function sendMessage(event, messageInput, room) {

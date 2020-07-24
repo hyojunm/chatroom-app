@@ -53,19 +53,25 @@ def handle_connection(message):
 
 	if message["room"] == "private":
 		user = users[user]
-		private_chat = users[session.get("private_chat")] if session.get("private_chat") else users[message["user"]]
+		private_chat = None
 
-		if message["message"] == "accepted the invite":
-			session["private_chat"] = message["user"]
-			emit("notification", message_info, room=user)
-		elif message["message"] == "left":
-			session.pop("private_chat")
-		
-		emit("notification", message_info, room=private_chat)
+		if "private_chat" in session:
+			private_chat = users[session.get("private_chat")]
+		elif "user" in message:
+			private_chat = users[message["user"]]
+
+		if private_chat:
+			if message["message"] == "accepted the invite":
+				session["private_chat"] = message["user"]
+				emit("notification", message_info, room=user)
+			elif message["message"] == "left" and "private_chat" in session:
+				session.pop("private_chat")
+
+			emit("notification", message_info, room=private_chat)
 	else:
 		if message["message"] == "joined":
 			users[user] = request.sid
-		else:
+		elif message["message"] == "left":
 			users.pop(user)
 
 		users_info = {

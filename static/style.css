@@ -1,0 +1,38 @@
+* {
+	border-radius: 0px !important;
+}
+
+.user {
+	color: black !important;
+	pointer-events: auto !important;
+}
+
+.user, #current-user {
+	max-width: 300px;
+}
+
+#history {
+	margin: 75px 0px 75px 0px;
+}
+
+#private-history {
+	width: 100%;
+	height: 50vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+@media screen and (max-width: 1000px) {
+	#current-user {
+		display: block;
+		max-width: 100%;
+		width: 100%;
+		padding: 16px 0px 8px 0px;
+		margin: 0px;
+		text-align: center;
+	}
+
+	#leave-btn {
+		width: 100%;
+	}
+}

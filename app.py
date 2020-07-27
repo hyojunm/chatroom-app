@@ -20,6 +20,9 @@ def home():
 
 @app.route("/join", methods=["GET", "POST"])
 def join():
+	if "user" in session:
+		return redirect(url_for("home"))
+
 	if request.method == "POST":
 		username = request.form["username"]
 
@@ -35,7 +38,7 @@ def join():
 
 @app.route("/leave")
 def leave():
-	if session.get("user"):
+	if "user" in session:
 		flash("You left the conversation. See you later!")
 		session.pop("user")
 
@@ -56,9 +59,9 @@ def handle_connection(message):
 		private_chat = None
 
 		if "private_chat" in session:
-			private_chat = users[session.get("private_chat")]
+			private_chat = users[session.get("private_chat")] if session.get("private_chat") in users else None
 		elif "user" in message:
-			private_chat = users[message["user"]]
+			private_chat = users[message["user"]] if message["user"] in users else None
 
 		if private_chat:
 			if message["message"] == "accepted the invite":
@@ -81,6 +84,26 @@ def handle_connection(message):
 
 		emit("notification", message_info, broadcast=True)
 		emit("users", users_info, broadcast=True)
+
+@socketio.on("connect")
+def connect():
+	message = {
+		"message": "joined",
+		"room": "public"
+	}
+
+	handle_connection(message)
+
+@socketio.on("disconnect")
+def disconnect():
+	message = {
+		"message": "left",
+		"room": "private"
+	}
+
+	handle_connection(message)
+	message["room"] = "public"
+	handle_connection(message)
 
 @socketio.on("message")
 def receive_message(message):

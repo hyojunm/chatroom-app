@@ -1,5 +1,5 @@
 socket.on("invitation", receiveInvitation);
-$("#private-chat").on("hidden.bs.modal", () => { leave("private"); });
+$("#private-chat").on("hidden.bs.modal", leavePrivateChat);
 
 function receiveInvitation(user) {
 	const confirmMessage = confirm(user.user + " invited you to a private chat.");
@@ -10,7 +10,7 @@ function receiveInvitation(user) {
 	};
 
 	if (confirmMessage) {
-		leave("private");
+		leavePrivateChat();
 
 		message.message = "accepted the invite";
 		socket.emit("connection", message);
@@ -31,4 +31,13 @@ function inviteUser(event) {
 	$("#private-chat").modal("show");
 	$("#private-chat-user").text(selectedUser);
 	$("#private-history").empty();
+}
+
+function leavePrivateChat() {
+	const message = {
+		"message": "left",
+		"room": "private"
+	};
+
+	socket.emit("connection", message);
 }

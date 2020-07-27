@@ -2,23 +2,23 @@
 
 {% block content %}
 <div class="container">
-	<div id="history" style="margin: 75px 0px 75px 0px"></div>
+	<div id="history"></div>
 
 	<form id="send" class="form-row p-3 bg-white fixed-bottom">
 		<input type="text" id="message-input" class="form-control col-10 shadow-none" name="message" placeholder="Type something..." required>
 		<button type="submit" id="send-btn" class="btn btn-dark col-2 shadow-none">Send</button>
 	</form>
 
-	<div class="modal fade" id="private-chat" tabindex="-1" role="dialog" aria-labelledby="private-chat-label" aria-hidden="true">
+	<div id="private-chat" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="private-chat-label" aria-hidden="true">
 	  	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		    <div class="modal-content">
 	      		<div class="modal-header bg-dark text-white">
-		     		<h5 class="modal-title" id="private-chat-label">
+		     		<h5 id="private-chat-label" class="modal-title text-truncate align-middle w-75">
 		     			Private chat with:
 		     			<strong id="private-chat-user"></strong>
 		     		</h5>
 
-		        	<button class="btn btn-outline-light shadow-none" data-dismiss="modal">Leave Private Chat</button>
+		        	<button class="btn btn-outline-light shadow-none w-25" data-dismiss="modal">Leave Private Chat</button>
 		      	</div>
 		      	<div class="modal-body">
 		        	<div id="private-history"></div>

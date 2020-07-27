@@ -1,40 +1,12 @@
-var socket = io.connect(window.location.protocol + "//" + document.domain + ":" + window.location.port, { transports: ["websocket"] });
+const server = window.location.protocol + "//" + document.domain + ":" + window.location.port;
+const socket = io.connect(server, { transports: ["websocket"] });
 
-socket.on("connect", join);
-socket.on("disconnect", () => { leave("public"); });
 socket.on("message", getMessage);
 socket.on("notification", getNotification);
 socket.on("users", updateUsers);
 
 $("#send-btn").click(event => { sendMessage(event, "message-input", "public"); });
 $("#private-send-btn").click(event => { sendMessage(event, "private-message-input", "private"); });
-$("#leave-btn").click(() => { leave("public"); });
-
-$(window).on("beforeunload", () => { leave("public"); });
-
-function join() {
-	const message = {
-		"message": "joined",
-		"room": "public"
-	};
-
-	socket.emit("connection", message);
-}
-
-function leave(room) {
-	const message = {
-		"message": "left",
-		"room": "private"
-	};
-
-	socket.emit("connection", message);
-
-	if (room == "public") {
-		message.room = "public";
-		socket.emit("connection", message);
-		socket.disconnect();
-	}
-}
 
 function sendMessage(event, messageInput, room) {
 	event.preventDefault();
@@ -49,11 +21,11 @@ function getMessage(message) {
 	const formattedDate = formatDate(message.date);
 	const newMessage = `
 		<div class="message row my-3">
-			<div class="col-3">
+			<div class="col-3 text-break">
 				<strong>${message.user}</strong><br>
 				<small>${formattedDate}</small>
 			</div>
-			<p class="col-9">${message.message}</p>
+			<p class="col-9 text-break">${message.message}</p>
 		</div>
 	`;
 
@@ -68,7 +40,7 @@ function getMessage(message) {
 
 function getNotification(message) {
 	const newMessage = `
-		<div class="alert alert-dark my-3 text-center">
+		<div class="alert alert-dark my-3 text-center text-break">
 			<strong>${message.user}</strong> ${message.message}.
 		</div>
 	`;
@@ -86,17 +58,17 @@ function updateUsers(users) {
 	$("#total-users").text(users.total);
 
 	for (user in users.usernames) {
-		const username = $(".user:contains('" + user + "')");
+		const username = $(`.user:contains(${String.raw`${user}`})`);
 
 		if (username.length <= 0) {
 			const newUser = `
-				<a href="#" class="dropdown-item disabled user" title="Start a private chat with ${user}">
+				<a href="#" class="dropdown-item disabled user text-truncate" title="Start a private chat with ${user}">
 		        	<strong>${user}</strong>
 		        </a>
 			`;
 
 			$("#users-list").append(newUser);
-			$(".user:contains('" + user + "')").click(inviteUser);
+			$(`.user:contains(${String.raw`${user}`})`).click(inviteUser);
 		}
 	}
 

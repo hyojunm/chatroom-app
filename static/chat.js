@@ -58,7 +58,10 @@ function updateUsers(users) {
 	$("#total-users").text(users.total);
 
 	for (user in users.usernames) {
-		const username = $(`.user:contains(${String.raw`${user}`})`);
+		const userElement = $(`.user:contains(${String.raw`${user}`})`);
+		const username = userElement.filter(index => {
+			return $(userElement[index]).text().replace("(you)", "").trim() == user;
+		});
 
 		if (username.length <= 0) {
 			const newUser = `

@@ -32,7 +32,7 @@
 				</a>
 			</li>
 
-			{% if user %}
+			{% if user and not show_footer %}
 				<li class="nav-item dropdown">
 					<a href="#" id="users-dropdown" class="nav-link dropdown-toggle" data-toggle="dropdown">
 						<span id="total-users">0</span> user(s) online
@@ -55,5 +55,18 @@
 	</nav>
 
 	{% block content %}{% endblock %}
+
+	{% if show_footer %}
+		<footer class="font-small bg-light text-center">
+			<div class="p-3">
+				Created by Jeremy Moon
+
+				<span class="mx-1">&middot;</span>
+
+				View source code on
+				<a href="https://github.com/hyojunm/chatroom-app" target="_blank">GitHub</a>
+			</div>
+		</footer>
+	{% endif %}
 </body>
 </html>

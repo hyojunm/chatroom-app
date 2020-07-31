@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% set title = error.name %}
+{% set show_footer = True %}
+
+{% block content %}
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+	<div>
+		<h2 class="text-center font-weight-bold mb-4">{{ error.code }}: {{ error.name }}</h2>
+
+		<p class="text-center">
+			<a href="{{url_for('home')}}" class="btn btn-dark shadow-none">Go back home</a>
+			<a href="https://github.com/hyojunm/chatroom-app" target="_blank" class="btn btn-dark shadow-none">View GitHub repository</a>
+		</p>
+	</div>
+</div>
+{% endblock %}

@@ -16,7 +16,7 @@ def home():
 	if not user:
 		return redirect(url_for("join"))
 
-	return render_template("chat.html", title="Home", user=user)
+	return render_template("chat.html", user=user)
 
 @app.route("/join", methods=["GET", "POST"])
 def join():
@@ -34,7 +34,7 @@ def join():
 			session["user"] = username
 			return redirect(url_for("home"))
 
-	return render_template("join.html", title="Join", user=False)
+	return render_template("join.html")
 
 @app.route("/leave")
 def leave():
@@ -43,6 +43,11 @@ def leave():
 		session.pop("user")
 
 	return redirect(url_for("join"))
+
+@app.errorhandler(404)
+def not_found(error):
+	user = session.get("user")
+	return render_template("error.html", user=user, error=error)
 
 @socketio.on("connection")
 def handle_connection(message):
